@@ -19,6 +19,7 @@ class ChatView(ViewSet):
     manager_service = ChatService()
 
     def create(self, request) -> HttpResponse:
+        self.manager_service.chat(request)
         return JsonResponse({})
 
     def list(self, request: HttpRequest) -> HttpResponse:
