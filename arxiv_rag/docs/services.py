@@ -27,7 +27,8 @@ class DocumentService(object):
         documents = loader.load()
         chunks = self.recursive_splitter.split_documents(documents)
 
-        num_chunks = docs_signal.send(sender='docs', query=chunks)
+        num_chunks = docs_signal.send(sender='docs', docs=chunks)[1]
+        print(num_chunks)
         return JsonResponse({
             'code': 200,
             'result': {
