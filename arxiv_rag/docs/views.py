@@ -20,8 +20,8 @@ class DocumentView(ViewSet):
     manager_service = DocumentService()
 
     def create(self, request) -> HttpResponse:
-        self.manager_service.update_document(request)
-        return JsonResponse({})
+        return self.manager_service.update_document(request)
+
 
     def list(self, request: HttpRequest) -> HttpResponse:
         return JsonResponse({})
