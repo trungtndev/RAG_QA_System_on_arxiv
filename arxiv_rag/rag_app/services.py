@@ -49,7 +49,7 @@ class RagService:
             self.client.create_collection(
                 collection_name=collection_name,
                 vectors_config={
-                    "dense": VectorParams(size=768, distance=Distance.COSINE),
+                    "dense": VectorParams(size=384, distance=Distance.COSINE),
                 },
                 sparse_vectors_config={
                     "sparse": SparseVectorParams(),
