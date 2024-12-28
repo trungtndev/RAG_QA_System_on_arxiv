@@ -12,5 +12,7 @@ class ChatService(object):
         answer = chat_signal.send(sender='chat', query=question)
         return JsonResponse({
             'code': 200,
-            'result': answer
+            'result': {
+                'answer': answer
+            }
         })
