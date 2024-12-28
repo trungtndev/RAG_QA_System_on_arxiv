@@ -17,7 +17,7 @@ class RagService:
     def __init__(self, validate=True):
         self.client = QdrantClient(**settings.DATABASES["qdrant"])
         if validate:
-            self._validate_collection(**settings.RAG_CONFIG["QDRANT_VECTORSTORE"]["collection_name"])
+            self._validate_collection(settings.RAG_CONFIG["QDRANT_VECTORSTORE"]["collection_name"])
 
         self.dense_embedding = HuggingFaceEmbeddings(**settings.RAG_CONFIG["DENSE_EMBEDDING"])
         self.sparse_embedding = FastEmbedSparse(**settings.RAG_CONFIG["SPARSE_EMBEDDING"])
