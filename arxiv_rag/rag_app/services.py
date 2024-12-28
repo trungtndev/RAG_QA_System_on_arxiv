@@ -1,17 +1,32 @@
 
 from django.conf import settings
 from langchain_core.runnables.passthrough import RunnablePassthrough
+from langchain_core.prompts import PromptTemplate
 
 from langchain_huggingface import HuggingFaceEmbeddings, HuggingFacePipeline
 from langchain_qdrant import FastEmbedSparse, QdrantVectorStore
 
 from qdrant_client import QdrantClient
-from qdrant_client.models import (VectorParams,
-                                  Distance,
-                                  SparseVectorParams,
-                                  )
-from rag_core.output_parser import AnswerOutputParser
 
+from rag_core.output_parser import AnswerOutputParser
+from rag_core.utils import format_documents
+
+SYSTEM_PROMPT = """
+Chú ý các yêu cầu sau:
+- Câu trả lời phải chính xác và đầy đủ nếu ngữ cảnh có câu trả lời. 
+- Chỉ sử dụng các thông tin có trong ngữ cảnh được cung cấp.
+- Chỉ cần từ chối trả lời và không suy luận gì thêm nếu ngữ cảnh không có câu trả lời.
+Hãy trả lời câu hỏi dựa trên ngữ cảnh:
+### Ngữ cảnh :
+{context}
+
+### Câu hỏi :
+{question}
+
+### Trả lời :
+
+"""
+PROMPT = PromptTemplate(template=SYSTEM_PROMPT, input_variables=["context", "question"])
 
 class RagService:
     def __init__(self, validate=True):
@@ -40,11 +55,16 @@ class RagService:
 
     @property
     def qa_chain(self):
-        return ({"context": self.retriever, "question": RunnablePassthrough()}
-         | self.llm
-         | AnswerOutputParser()
-         )
+        return ({"context": self.retriever | format_documents, "question": RunnablePassthrough()}
+             | PROMPT
+             | self.llm
+             | AnswerOutputParser()
+             )
     def _validate_collection(self, collection_name):
+        from qdrant_client.models import (VectorParams,
+                                          Distance,
+                                          SparseVectorParams,
+                                          )
         if not self.client.collection_exists(collection_name):
             self.client.create_collection(
                 collection_name=collection_name,
