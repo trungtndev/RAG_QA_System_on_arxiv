@@ -10,7 +10,6 @@ class ChatService(object):
 
         question = htpp2json.get("message")
         answer = chat_signal.send(sender='chat', query=question)
-        print(answer)
         return JsonResponse({
             'code': 200,
             'result': {

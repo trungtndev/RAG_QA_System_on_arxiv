@@ -23,7 +23,7 @@ class DocumentService(object):
                                      file_path=uploaded_file,
                                      )
         file_instance.save()
-        loader = PyPDFLoader(settings.BASE_DIR / file_instance.file.path)
+        loader = PyPDFLoader(settings.BASE_DIR / file_instance.file_path.path)
         documents = loader.load()
         chunks = self.recursive_splitter.split_documents(documents)
 

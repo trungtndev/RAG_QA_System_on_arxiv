@@ -58,7 +58,7 @@ class RagService:
         return ({"context": self.retriever | format_documents, "question": RunnablePassthrough()}
              | PROMPT
              | self.llm
-             | AnswerOutputParser()
+             # | AnswerOutputParser()
              )
     def _validate_collection(self, collection_name):
         from qdrant_client.models import (VectorParams,
