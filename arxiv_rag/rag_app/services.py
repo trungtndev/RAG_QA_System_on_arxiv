@@ -47,18 +47,19 @@ class RagService:
         )
         self.retriever = self.db_store.as_retriever(**settings.RAG_CONFIG["RETRIEVER"])
 
+        self.qa_chain = self.create_chain()
+
     def add_docs(self, docs) -> list[str]:
         return self.db_store.add_documents(docs)
 
     def chat(self, query, **kwargs):
         return self.qa_chain.invoke(query)
 
-    @property
-    def qa_chain(self):
+    def create_chain(self):
         return ({"context": self.retriever | format_documents, "question": RunnablePassthrough()}
              | PROMPT
              | self.llm
-             # | AnswerOutputParser()
+             | AnswerOutputParser()
              )
     def _validate_collection(self, collection_name):
         from qdrant_client.models import (VectorParams,

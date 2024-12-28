@@ -8,7 +8,7 @@ class AnswerOutputParser(StrOutputParser):
         return self.extract_anwser(text)
 
     def extract_anwser(self, output: str) -> str:
-        pattern = r"### Trả lời: \n(.*)"
+        pattern = r"### Trả lời :\n(.*)"
         match = re.search(pattern, output, re.DOTALL)
         if match:
             return match.group(1).strip()

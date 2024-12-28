@@ -11,7 +11,7 @@ from rag_app.signals import docs_signal
 
 class DocumentService(object):
     def __init__(self):
-        recursive_splitter = RecursiveCharacterTextSplitter(
+        self.recursive_splitter = RecursiveCharacterTextSplitter(
             chunk_size=1024,
             chunk_overlap=128,
             add_start_index=True,
